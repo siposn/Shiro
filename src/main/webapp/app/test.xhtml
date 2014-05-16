@@ -1,0 +1,55 @@
+<!DOCTYPE HTML PUBLIC "-//W3C//DTD HTML 4.01 Transitional//EN" "http://www.w3.org/TR/html4/loose.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+      xmlns:h="http://java.sun.com/jsf/html"
+      xmlns:f="http://java.sun.com/jsf/core"
+      xmlns:ui="http://java.sun.com/jsf/facelets"
+      xmlns:p="http://primefaces.org/ui"
+      xmlns:c="http://java.sun.com/jsp/jstl/core">
+
+    <f:view contentType="text/html">
+        <h:head>
+            <f:facet name="first">
+                <meta content='text/html; charset=UTF-8' http-equiv="Content-Type"/>
+                <title>PrimeFaces</title>
+            </f:facet>
+        </h:head>
+
+        <h:body>
+
+            <h:form>
+                <p:growl id="msgs" showDetail="true"/>
+                
+                <c:if test="#{request.isUserInRole('user')}">
+                    <h:outputText value="Hello user"/><br/>
+                </c:if>
+               
+                <p:spinner rendered="#{request.isUserInRole('admin')}"/><br/>    
+                 
+                <p:panel header="City chooser" style="margin-bottom:10px;" rendered="#{request.isUserInRole('user')}">
+                        <h:panelGrid columns="2" cellpadding="5">
+                            <p:selectOneMenu id="city" value="#{testController.city}">
+                                <f:selectItem itemLabel="Select City" itemValue="" />
+                                <f:selectItems value="#{testController.cities}" />
+                                <p:ajax update="suburbs"
+                                        listener="#{testController.handleCityChange}" />
+                            </p:selectOneMenu>
+
+                            <p:selectOneMenu id="suburbs" value="#{testController.suburb}">
+                                <f:selectItem itemLabel="Select Suburb" itemValue="" />
+                                <f:selectItems value="#{testController.suburbs}" />
+                            </p:selectOneMenu>
+                        </h:panelGrid>
+
+                        <p:separator />
+
+                        <p:commandButton value="Submit" update="msgs" actionListener="#{testController.displayLocation}" id="btnSubmit"/>
+
+                </p:panel>
+                
+                <p:commandButton value="Log out" action="#{logoutBean.submit()}" />
+            </h:form>
+        </h:body>
+
+    </f:view>
+</html>
+
